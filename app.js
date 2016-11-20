@@ -5,12 +5,36 @@ var app = express();
 
 
 app.get('/', function(req, res) {
-  fs.readFile('./blogs/test.md','utf-8', function (err, data) {
+  fs.readdir('./blogs', function (err, files) {
     if (err) res.send(err);
-    res.send(data);
-    console.log(data);
-  });
+
+    fs.readFile('./index.html','utf-8', function (err, html) {
+      if (err) res.send(err);
+
+      var lis = files.map(function (filename) {
+        var file = filename.split('.')[0]
+
+        return '<li><a href="/blog/' + file +'">' + file +'</a></li>'
+      })
+
+      var ulHtml = '<ul>' + lis.join('') +'</ul>'
+      res.send(html.replace('REPLACE_STRING', ulHtml))
+    })
+  })
 });
 
+app.get('/blog/:title', function (req, res) {
+  console.log(req.params.title);
+  var title = req.params.title
+  fs.readFile('./blogs/' + title + '.md','utf-8', function (err, data) {
+    if (err) res.send('Not Found: ' + title);
+    res.send(data);
+  });
+  //blog page
+});
+app.get('*', function(req, res) {
+  res.send('Not Found');
+
+});
 app.listen(3000);
 console.log('server is running at 3000!');
