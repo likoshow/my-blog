@@ -1,6 +1,7 @@
 //app.js
 var express = require('express');
 var fs = require('fs');
+var marked = require('marked');
 var app = express();
 
 
@@ -28,7 +29,7 @@ app.get('/blog/:title', function (req, res) {
   var title = req.params.title
   fs.readFile('./blogs/' + title + '.md','utf-8', function (err, data) {
     if (err) res.send('Not Found: ' + title);
-    res.send(data);
+    res.send(marked(data));
   });
   //blog page
 });
