@@ -37,5 +37,5 @@ app.get('*', function(req, res) {
   res.send('Not Found');
 
 });
-app.listen(3000);
+app.listen(80);
 console.log('server is running at 3000!');
